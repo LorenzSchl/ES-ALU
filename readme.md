@@ -4,12 +4,15 @@ Ihre Aufgabe ist es, eine applikationsspezifische arithmetisch-logische Einheit 
 Die Wortbreite der ALU beträgt 8 bit; damit sind die Eingangsoperatoren (A, B) festgelegt. 
 Am Ausgang ist eine 16-bit Wortbreite notwendig, da die ALU auch einen Multiplikationsbefehl besitzt. 
 Zusätzlich besitzt die Alu noch ein Carry-Flag (Überlauf der unteren 8-bit des Ergebnisses) und ein Equal-Flag (A=B: Equal-Flag = 1). 
+
 Folgender vhd-Dateirumpf ist zusätzlich gegeben:
+
+```vhdl
 
 library ieee;
 use ieee.std_logic_1164.all;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
-```
+
 entity ASALU is
   port (
     CLK : in std_logic;
@@ -20,6 +23,7 @@ entity ASALU is
     Cout : out std_logic;
     Equal : out std_logic);
   end;
+  
 ```
 
 Im Einzelnen sind folgende Befehle festgelegt:
