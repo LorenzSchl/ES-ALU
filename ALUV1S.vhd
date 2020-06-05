@@ -20,6 +20,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
+use ieee.NUMERIC_STD.all;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -82,9 +83,8 @@ begin
 				when "1101" => -- XOR(A,B)
 					FLow <= A xor B;
 				when "1110" => -- CRC_MEM
-					FLow <= 0;
-					FHigh <= 0;
 				when "1111" => -- RESERVED
+				when others => 
 			end case;
 		end if;
 	end process;
