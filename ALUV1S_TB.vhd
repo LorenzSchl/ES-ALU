@@ -60,10 +60,10 @@ ARCHITECTURE behavior OF ALUV1S_TB IS
    signal Cmd : std_logic_vector(3 downto 0) := (others => '0');
 
  	--Outputs
-   signal FLow : std_logic_vector(7 downto 0);
-   signal FHigh : std_logic_vector(7 downto 0);
-   signal Cout : std_logic;
-   signal Equal : std_logic;
+   signal LowOut : std_logic_vector(7 downto 0);
+   signal HighOut : std_logic_vector(7 downto 0);
+   signal COut : std_logic;
+   signal EqualOut : std_logic;
 
    -- Clock period definitions
    constant CLK_period : time := 10 ns;
@@ -138,10 +138,10 @@ BEGIN
           A => A,
           B => B,
           Cmd => Cmd,
-          FLow => FLow,
-          FHigh => FHigh,
-          Cout => Cout,
-          Equal => Equal
+          FLow => LowOut,
+          FHigh => HighOut,
+          Cout => COut,
+          Equal => EqualOut
         );
 
    -- Clock process definitions
@@ -158,12 +158,22 @@ BEGIN
    stim_proc: process
    begin		
       -- hold reset state for 100 ns.
-      wait for 100 ns;	
+      wait for 100 ns;
 
       wait for CLK_period*10;
 
       -- insert stimulus here 
-
+		
+		A <= x"FF";
+		B <= x"01";
+		
+		CMD <= x"0";
+		
+		CLK <= '0';
+		wait for CLK_period/2;
+		CLK <= '1';
+		wait for CLK_period/2;
+		
       wait;
    end process;
 
