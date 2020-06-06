@@ -129,8 +129,11 @@ begin
 end std_logic2string;
 
 shared variable expected : STRING(18 DOWNTO 1);
- 
+
+-- Testbench
 BEGIN
+	-- Taktgenerator
+	clk <= NOT clk AFTER 50 ns;
  
 	-- Instantiate the Unit Under Test (UUT)
    uut: ALUV1S PORT MAP (
@@ -144,37 +147,78 @@ BEGIN
           Equal => EqualOut
         );
 
-   -- Clock process definitions
-   CLK_process :process
-   begin
-		CLK <= '0';
-		wait for CLK_period/2;
-		CLK <= '1';
-		wait for CLK_period/2;
-   end process;
+STIMULI: PROCESS(clk)
+  FILE testpattern: TEXT OPEN READ_MODE IS "stimuli.txt";
+  VARIABLE zeile: LINE;
+  VARIABLE leerzeichen: CHARACTER;
+  VARIABLE var1: STRING(8 DOWNTO 1);
+  VARIABLE var2: STRING(8 DOWNTO 1);
+BEGIN
+  IF(clk'EVENT AND clk = '1') THEN
+    IF(NOT endfile(testpattern)) THEN
+      readline(testpattern, zeile);
+      read(zeile, var1);
+      in1 <= string2std_logic(var1);
+-- Überspringen des Leerzeichens
+      read(zeile, leerzeichen);
+      read(zeile, var2);
+      in2 <= string2std_logic(var2);
+    ELSE
+      in1 <= (OTHERS => '0');
+      in2 <= (OTHERS => '0');
+    END IF;
+  END IF;
+END PROCESS STIMULI;
  
+RESPONSE: PROCESS(clk)
+  FILE vergleichspattern: TEXT OPEN READ_MODE IS "expected.txt";
+  VARIABLE zeile: LINE;
+  VARIABLE var: STRING(18 DOWNTO 1);
+BEGIN
+  IF(clk'EVENT AND clk = '1') THEN
+    IF(NOW > 100 ns) THEN
+      IF(NOT endfile(vergleichspattern)) THEN
+        readline(vergleichspattern, zeile);
+        read(zeile, var);
+		  expected := var;
+        ASSERT string2std_logic(var) = out1
+          REPORT "Vergleich fehlerhaft!" & "  Erwartungswert: " & var & "  Ergebnis: " & std_logic2string(out1)
+          SEVERITY WARNING;
+		ELSE expected := (others => 'X');
+      END IF;
+    END IF;
+  END IF;
+  --out2 <= in1 * in2;
+END PROCESS RESPONSE;
 
-   -- Stimulus process
-   stim_proc: process
-   begin		
-      -- hold reset state for 100 ns.
-      wait for 100 ns;
-
-      wait for CLK_period*10;
-
-      -- insert stimulus here 
-		
-		A <= x"01";
-		B <= x"01";
-		
-		CMD <= x"0";
-		
-		CLK <= '0';
-		wait for CLK_period/2;
-		CLK <= '1';
-		wait for CLK_period/2;
-		
-      wait;
-   end process;
+MONITOR: PROCESS(clk)
+  FILE protokoll: TEXT OPEN WRITE_MODE IS "monitor.txt";
+  VARIABLE zeile: LINE;
+  VARIABLE leerzeichen: CHARACTER := ' ';
+  VARIABLE var1: STRING(8 DOWNTO 1);
+  VARIABLE var2: STRING(8 DOWNTO 1);
+  VARIABLE var3: STRING(18 DOWNTO 1);
+  VARIABLE simulationszeit: TIME;
+BEGIN
+  IF(NOW > 100 ns) THEN
+    IF(clk'EVENT AND clk = '1') THEN
+      var1 := std_logic2string(in1);
+		var2 := std_logic2string(in2);
+		var3 := std_logic2string(out1);
+      simulationszeit := NOW;
+      write(zeile, "in1: " & var1);
+      write(zeile, leerzeichen);
+		write(zeile, "in2: " & var2);
+      write(zeile, leerzeichen);
+		write(zeile, "Expected: " & expected);
+      write(zeile, leerzeichen);
+		write(zeile, "out1: " & var3);
+      write(zeile, leerzeichen);
+      write(zeile, "Time: ");
+		write(zeile, simulationszeit);
+      writeline(protokoll, zeile);
+    END IF;
+  END IF;	 
+END PROCESS MONITOR;
 
 END;
