@@ -284,6 +284,7 @@ BEGIN
       write(zeile, leerzeichen);
 		write(zeile, "Equals: " & EqualsVar);
       write(zeile, leerzeichen);
+
 		
 		
       write(zeile, "Time: ");
