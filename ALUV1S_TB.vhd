@@ -164,7 +164,7 @@ BEGIN
 
       -- insert stimulus here 
 		
-		A <= x"FF";
+		A <= x"01";
 		B <= x"01";
 		
 		CMD <= x"0";
