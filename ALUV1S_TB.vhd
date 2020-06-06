@@ -27,6 +27,9 @@
 --------------------------------------------------------------------------------
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
+USE STD.TEXTIO.ALL;
+USE ieee.numeric_std.ALL;
+use IEEE.std_logic_unsigned.all;
  
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -128,9 +131,15 @@ begin
   return result;
 end std_logic2string;
 
-shared variable expected : STRING(18 DOWNTO 1);
- 
+shared variable expectedFlow : STRING(8 DOWNTO 1);
+shared variable expectedFHigh : STRING(8 DOWNTO 1);
+shared variable expectedCOut : STRING(1 DOWNTO 1);
+shared variable expectedEqual : STRING(1 DOWNTO 1);
+
+-- Testbench
 BEGIN
+	-- Taktgenerator
+	CLK <= NOT CLK AFTER 50 ns;
  
 	-- Instantiate the Unit Under Test (UUT)
    uut: ALUV1S PORT MAP (
@@ -144,37 +153,145 @@ BEGIN
           Equal => EqualOut
         );
 
-   -- Clock process definitions
-   CLK_process :process
-   begin
-		CLK <= '0';
-		wait for CLK_period/2;
-		CLK <= '1';
-		wait for CLK_period/2;
-   end process;
+STIMULI: PROCESS(CLK)
+  FILE testpattern: TEXT OPEN READ_MODE IS "stimuli.txt";
+  VARIABLE zeile: LINE;
+  VARIABLE leerzeichen: CHARACTER;
+  VARIABLE var1: STRING(8 DOWNTO 1);
+  VARIABLE var2: STRING(8 DOWNTO 1);
+  VARIABLE cmdVar: STRING(4 DOWNTO 1);
+BEGIN
+  IF(CLK'EVENT AND CLK = '1') THEN
+    IF(NOT endfile(testpattern)) THEN
+      readline(testpattern, zeile);
+      read(zeile, var1);
+      A <= string2std_logic(var1);
+		
+		-- Überspringen des Leerzeichens
+      read(zeile, leerzeichen);
+      read(zeile, var2);
+      B <= string2std_logic(var2);
+		
+		-- Überspringen des Leerzeichens
+		read(zeile, leerzeichen);
+		read(zeile, cmdVar);
+		Cmd <= string2std_logic(cmdVar);
+    ELSE
+      A <= (OTHERS => '0');
+      B <= (OTHERS => '0');
+		Cmd <= (OTHERS => '0');
+    END IF;
+  END IF;
+END PROCESS STIMULI;
  
+RESPONSE: PROCESS(CLK)
+  FILE vergleichspattern: TEXT OPEN READ_MODE IS "expected.txt";
+  VARIABLE zeile: LINE;
+  VARIABLE leerzeichen: CHARACTER;
+  VARIABLE lowVar: STRING(8 DOWNTO 1);
+  VARIABLE highVar: STRING(8 DOWNTO 1);
+  VARIABLE COutVar: STRING(1 DOWNTO 1);
+  VARIABLE EqualsVar: STRING(1 DOWNTO 1);
+BEGIN
+  IF(CLK'EVENT AND CLK = '1') THEN
+    IF(NOW > 100 ns) THEN
+      IF(NOT endfile(vergleichspattern)) THEN
+        readline(vergleichspattern, zeile);
+        -- Assert for FLow
+		  read(zeile, lowVar);
+		  expectedFlow := lowVar;
+        ASSERT string2std_logic(lowVar) = LowOut
+          REPORT "Vergleich fehlerhaft!" & "  Erwartungswert: " & lowVar & "  Ergebnis: " & std_logic2string(LowOut)
+          SEVERITY WARNING;
+		  
+		  -- Assert for FHigh
+		  read(zeile, leerzeichen); --Deleting the LEERZEICHEN!
+		  read(zeile, highVar);
+		  expectedFHigh := highVar;
+        ASSERT string2std_logic(highVar) = HighOut
+          REPORT "Vergleich fehlerhaft!" & "  Erwartungswert: " & highVar & "  Ergebnis: " & std_logic2string(HighOut)
+          SEVERITY WARNING;
+		  -- Assert for COut
+		  read(zeile, leerzeichen); --Deleting the LEERZEICHEN!
+		  read(zeile, COutVar);
+		  expectedCOut := COutVar;
+        ASSERT char2std_logic(COutVar(1)) = COut
+          REPORT "Vergleich fehlerhaft!" & "  Erwartungswert: " & COutVar & "  Ergebnis: " & std_logic2char(COut)
+          SEVERITY WARNING;
+		  -- Assert for Equal
+		  read(zeile, leerzeichen); --Deleting the LEERZEICHEN!
+		  read(zeile, EqualsVar);
+		  expectedEqual := EqualsVar;
+        ASSERT char2std_logic(EqualsVar(1)) = EqualOut
+          REPORT "Vergleich fehlerhaft!" & "  Erwartungswert: " & EqualsVar & "  Ergebnis: " & std_logic2char(EqualOut)
+          SEVERITY WARNING;
+		ELSE 
+			expectedFlow := (others => 'X');
+			expectedFHigh := (others => 'X');
+			expectedCOut := (others => 'X');
+			expectedEqual := (others => 'X');
+      END IF;
+    END IF;
+  END IF;
+  --out2 <= in1 * in2;
+END PROCESS RESPONSE;
 
-   -- Stimulus process
-   stim_proc: process
-   begin		
-      -- hold reset state for 100 ns.
-      wait for 100 ns;
+MONITOR: PROCESS(CLK)
+  FILE protokoll: TEXT OPEN WRITE_MODE IS "monitor.txt";
+  VARIABLE zeile: LINE;
+  VARIABLE leerzeichen: CHARACTER := ' ';
+  VARIABLE AVar: STRING(8 DOWNTO 1);
+  VARIABLE BVar: STRING(8 DOWNTO 1);
+  VARIABLE CmdVar: STRING(4 DOWNTO 1);
+  VARIABLE FLowVar: STRING(8 DOWNTO 1);
+  VARIABLE FHighVar: STRING(8 DOWNTO 1);
+  VARIABLE COutVar: STRING(1 DOWNTO 1);
+  VARIABLE EqualsVar: STRING(1 DOWNTO 1);
 
-      wait for CLK_period*10;
+  VARIABLE simulationszeit: TIME;
+BEGIN
+  IF(NOW > 100 ns) THEN
+    IF(CLK'EVENT AND CLK = '1') THEN
+      AVar := std_logic2string(A);
+		BVar := std_logic2string(B);
+		CmdVar := std_logic2string(Cmd);
+      simulationszeit := NOW;
+		
+		--Inputs
+      write(zeile, "A: " & AVar);
+      write(zeile, leerzeichen);
+		write(zeile, "B: " & BVar);
+      write(zeile, leerzeichen);
+		write(zeile, "Cmd: " & CmdVar);
+      write(zeile, leerzeichen);
+		
+		--Expected Values
+		write(zeile, "Exp-FLow: " & expectedFlow);
+      write(zeile, leerzeichen);
+		write(zeile, "Exp-FHigh: " & expectedFHigh);
+      write(zeile, leerzeichen);
+		write(zeile, "Exp-COut" & expectedCOut);
+      write(zeile, leerzeichen);
+		write(zeile, "Exp-Equal: " & expectedEqual);
+      write(zeile, leerzeichen);
+		
+		--Actual Values
+		write(zeile, "FLow: " & FLowVar);
+      write(zeile, leerzeichen);
+		write(zeile, "FHigh: " & FHighVar);
+      write(zeile, leerzeichen);
+		write(zeile, "COut: " & COutVar);
+      write(zeile, leerzeichen);
+		write(zeile, "Equals: " & EqualsVar);
+      write(zeile, leerzeichen);
 
-      -- insert stimulus here 
 		
-		A <= x"FF";
-		B <= x"FF";
 		
-		CMD <= "0111";
-		
-		CLK <= '0';
-		wait for CLK_period/2;
-		CLK <= '1';
-		wait for CLK_period/2;
-		
-      wait;
-   end process;
+      write(zeile, "Time: ");
+		write(zeile, simulationszeit);
+      writeline(protokoll, zeile);
+    END IF;
+  END IF;	 
+END PROCESS MONITOR;
 
 END;
