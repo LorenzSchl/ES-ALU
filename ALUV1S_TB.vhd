@@ -215,15 +215,15 @@ BEGIN
 		  read(zeile, leerzeichen); --Deleting the LEERZEICHEN!
 		  read(zeile, COutVar);
 		  expectedCOut := COutVar;
-        ASSERT string2std_logic(COutVar) = COut
-          REPORT "Vergleich fehlerhaft!" & "  Erwartungswert: " & COutVar & "  Ergebnis: " & std_logic2string(COut)
+        ASSERT char2std_logic(COutVar(1)) = COut
+          REPORT "Vergleich fehlerhaft!" & "  Erwartungswert: " & COutVar & "  Ergebnis: " & std_logic2char(COut)
           SEVERITY WARNING;
 		  -- Assert for Equal
 		  read(zeile, leerzeichen); --Deleting the LEERZEICHEN!
 		  read(zeile, EqualsVar);
 		  expectedEqual := EqualsVar;
         ASSERT char2std_logic(EqualsVar(1)) = EqualOut
-          REPORT "Vergleich fehlerhaft!" & "  Erwartungswert: " & EqualsVar & "  Ergebnis: " & std_logic2string(EqualOut)
+          REPORT "Vergleich fehlerhaft!" & "  Erwartungswert: " & EqualsVar & "  Ergebnis: " & std_logic2char(EqualOut)
           SEVERITY WARNING;
 		ELSE 
 			expectedFlow := (others => 'X');
