@@ -255,6 +255,8 @@ BEGIN
       AVar := std_logic2string(A);
 		BVar := std_logic2string(B);
 		CmdVar := std_logic2string(Cmd);
+		FLowVar := std_logic2string(LowOut);
+		FHighVar := std_logic2string(HighOut);
       simulationszeit := NOW;
 		
 		--Inputs
