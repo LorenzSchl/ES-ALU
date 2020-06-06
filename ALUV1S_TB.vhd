@@ -164,10 +164,10 @@ BEGIN
 
       -- insert stimulus here 
 		
-		A <= x"01";
-		B <= x"01";
+		A <= x"FF";
+		B <= x"FF";
 		
-		CMD <= x"0";
+		CMD <= "0111";
 		
 		CLK <= '0';
 		wait for CLK_period/2;
