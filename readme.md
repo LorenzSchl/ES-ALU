@@ -1,4 +1,4 @@
-# Projektaufgabe 3 : App likationsspezifische ALU
+# Projektaufgabe 3 : Applikationsspezifische ALU
 
 Ihre Aufgabe ist es, eine applikationsspezifische arithmetisch-logische Einheit (ALU) zu realisieren und zu spezifizieren, die als Berechnungseinheit in einer kleinen Motorsteuerung eingesetzt werden soll. 
 Die Wortbreite der ALU beträgt 8 bit; damit sind die Eingangsoperatoren (A, B) festgelegt. 
