@@ -50,7 +50,7 @@ architecture Behavioral of ALUV1S is begin
 	begin					
 		if rising_edge(CLK) then
 			if A = B then
-				Equal <= '0';
+				Equal <= '1';
 			end if;
 			
 			case(Cmd) is
