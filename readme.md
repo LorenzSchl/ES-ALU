@@ -78,10 +78,8 @@ Tabelle 2: Gruppenschwerpunkte
 * Verschiedene Berechnungen in eigene Komponenten auslagern
 * Gibt es ein schnelleren Addierer?
 * Gibt es einen schnelleren Multiplizierer?
-* Negation überdenken?
+* ~~Negation überdenken?~~
 * Wie gehen wir mit Negativen Zahlen um?
-* Als Eingaben verboten - Wird nur im zweier Komplement ausgegeben
-* Als Eingaben erlaubt - Wie werden die unterschieden und anders verarbeitet?
-	
-	
+  *  Als Eingaben verboten - Wird nur im einer Komplement ausgegeben
+  * ~~Als Eingaben erlaubt - Wie werden die unterschieden und anders verarbeitet?~~
 * Welche Parameter sollen wir in Aufgabe 3 angeben?
