@@ -197,19 +197,18 @@ BEGIN
     IF(NOW > 100 ns) THEN
       IF(NOT endfile(vergleichspattern)) THEN
         readline(vergleichspattern, zeile);
-        -- Assert for FLow
-		  read(zeile, lowVar);
-		  expectedFlow := lowVar;
-        ASSERT string2std_logic(lowVar) = LowOut
-          REPORT "Vergleich fehlerhaft!" & "  Erwartungswert: " & lowVar & "  Ergebnis: " & std_logic2string(LowOut)
-          SEVERITY WARNING;
-		  
-		  -- Assert for FHigh
-		  read(zeile, leerzeichen); --Deleting the LEERZEICHEN!
+        -- Assert for FHigh
 		  read(zeile, highVar);
 		  expectedFHigh := highVar;
         ASSERT string2std_logic(highVar) = HighOut
           REPORT "Vergleich fehlerhaft!" & "  Erwartungswert: " & highVar & "  Ergebnis: " & std_logic2string(HighOut)
+          SEVERITY WARNING;		  
+		  -- Assert for FLow
+		  read(zeile, leerzeichen); --Deleting the LEERZEICHEN!
+		  read(zeile, lowVar);
+		  expectedFlow := lowVar;
+        ASSERT string2std_logic(lowVar) = LowOut
+          REPORT "Vergleich fehlerhaft!" & "  Erwartungswert: " & lowVar & "  Ergebnis: " & std_logic2string(LowOut)
           SEVERITY WARNING;
 		  -- Assert for COut
 		  read(zeile, leerzeichen); --Deleting the LEERZEICHEN!
