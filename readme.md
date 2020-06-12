@@ -70,4 +70,16 @@ Tabelle 2: Gruppenschwerpunkte
 |Ochsner, Salvage, Stuke| Virtex4| „Minimaler“ Ressourceneinsatz|
 |Ertingshausen, Lee, Schottelius| Virtex4| „Minimaler“ Ressourceneinsatz|
 
-
+## TODOs: 
+* Mehr Testvektoren (generieren)
+* Fehlende Funktionen implementieren	
+* CRC_MEM
+* Constanten aus den Shifts/Rotates entfernen?
+* Verschiedene Berechnungen in eigene Komponenten auslagern
+* Gibt es ein schnelleren Addierer?
+* Gibt es einen schnelleren Multiplizierer?
+* ~~Negation überdenken?~~
+* Wie gehen wir mit Negativen Zahlen um?
+  *  Als Eingaben verboten - Wird nur im einer Komplement ausgegeben
+  * ~~Als Eingaben erlaubt - Wie werden die unterschieden und anders verarbeitet?~~
+* Welche Parameter sollen wir in Aufgabe 3 angeben?
