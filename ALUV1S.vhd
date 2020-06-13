@@ -53,7 +53,10 @@ architecture Behavioral of ALUV1S is
 	signal subABCarry : std_logic := '0';
 	signal subBAResult : std_logic_vector(7 downto 0) := (others => '0');
 	signal subBACarry : std_logic := '0';
-
+	
+	--Signal for Subtracter Results
+	signal A_rll : std_logic_vector(7 downto 0) := (others => '0');
+	signal A_rlr : std_logic_vector(7 downto 0) := (others => '0');
 begin
 
 	--Instatntiation of Carry Look Ahead Adder
@@ -75,6 +78,16 @@ begin
 					B => A,
 					Data => subBAResult,
 					carry => subBACarry);
+	 --Instantiation of Left Rotate
+	 RLL: entity work.rotater port map(
+					X_In => A,
+					rotate_left => '1',
+					X_Out => A_rll);
+	 --Instantiation of Left Rotate
+	 RLR: entity work.rotater port map(
+					X_In => A,
+					rotate_left => '0',					
+					X_Out => A_rlr);
 				  
 	process(A, B, Cmd, CLK)
 		variable tmpCarry : std_logic := '0';
