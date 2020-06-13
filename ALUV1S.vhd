@@ -47,7 +47,20 @@ architecture Behavioral of ALUV1S is
 	--Signal for Adder Results
 	signal adderSumResult : std_logic_vector(7 downto 0) := (others => '0');
 	signal adderCarry : std_logic := '0';
-
+	
+	--Signals for CRC
+	signal crcDataInA : std_logic_vector(7 downto 0);
+	signal crcDataInB : std_logic_vector(7 downto 0);
+	signal crcDataOutA : std_logic_vector(7 downto 0);
+	signal crcDataOutB : std_logic_vector(7 downto 0);
+	signal crcAddA : std_logic_vector(8 downto 0);
+	signal crcAddB : std_logic_vector(8 downto 0);
+	signal crcResA : std_logic := '1';
+	signal crcResB : std_logic := '1';
+	signal crcEnA : std_logic := '0';
+	signal crcEnB : std_logic := '0';
+	signal crcWrEnA : std_logic := '0';
+	signal crcWrEnB : std_logic := '0';
 begin
 
 	--Instatntiation of Carry Look Ahead Adder
@@ -58,6 +71,23 @@ begin
               sum => adderSumResult,
               carry_out => adderCarry);
 				  
+		XYZRam : entity work.xyzram port map(
+		CLKA => CLK,
+		CLKB => CLK,
+		DIA => crcDataInA,
+		DIB => crcDataInB,
+		DOA => crcDataOutA,
+		DOB => crcDataOutB,
+		ADDRA => crcAddA,
+		ADDRB => crcAddB,
+		ENA => crcEnA,
+		ENB => crcEnB,
+		RSTA => crcResA,
+		RSTB => crcResB,
+		WEA => crcWrEnA,
+		WEB => crcWrEnB
+		);
+		 				  
 	process(A, B, Cmd, CLK)
 		variable tmpCarry : std_logic := '0';
 		variable tmp8Bit : std_logic_vector(7 downto 0) := x"00";
@@ -128,12 +158,17 @@ begin
 					FHigh <= tmp16Bit(15 downto 8);
 					
 				when "1100" => -- NAND(A,B)
-					FLow <= A nand B;
-					
+					FLow <= A nand B;							
 				when "1101" => -- XOR(A,B)
 					FLow <= A xor B;
 					
 				when "1110" => -- CRC_MEM
+				crcEnA <= '1';
+		      crcEnB <= '1';
+				crcResA <= '0';
+	         crcResB <= '0';
+				crcAddA <= x"00";
+				crcAddB <= x"00";
 				
 				when "1111" => -- RESERVED
 				
