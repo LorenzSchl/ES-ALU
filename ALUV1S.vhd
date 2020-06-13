@@ -42,35 +42,39 @@ entity ALUV1S is
     Equal : out std_logic);
 end ALUV1S;
 
-architecture Behavioral of ALUV1S is begin
+architecture Behavioral of ALUV1S is 
+	
+	--Signal for Adder Results
+	signal adderSumResult : std_logic_vector(7 downto 0) := (others => '0');
+	signal adderCarry : std_logic := '0';
+
+begin
+
+	--Instatntiation of Carry Look Ahead Adder
+		ADDER: entity work.CLAdder port map(
+		        x_in => A,
+              y_in => B,
+              carry_in => '0',
+              sum => adderSumResult,
+              carry_out => adderCarry);
+				  
 	process(A, B, Cmd, CLK)
 		variable tmpCarry : std_logic := '0';
 		variable tmp8Bit : std_logic_vector(7 downto 0) := x"00";
 		variable tmp16Bit : std_logic_vector(15 downto 0) := x"0000";
-	begin					
+		
+		
+	begin		
 		if rising_edge(CLK) then
 			if A = B then
 				Equal <= '1';
 			end if;
 			
 			case(Cmd) is
-				when "0000" => -- A+B									
-					for i in 0 to 7 loop
-						if A(i) = '1' and B(i) = '1' and tmpCarry = '1' then
-							tmp8Bit(i) := '0';
-						elsif (A(i) = '1' and B(i) = '1') or (A(i) = '1' and tmpCarry = '1') or (B(i) = '1' and tmpCarry = '1') then	
-							tmp8Bit(i) := '0';
-							tmpCarry := '1';
-						elsif A(i) = '1' or B(i) = '1' or tmpCarry = '1' then
-							tmp8Bit(i) := '1';
-							tmpCarry := '0';
-						else
-							tmp8Bit(i) := '0';
-							tmpCarry := '0';
-						end if;
-					end loop;
-					Cout <= tmpCarry;
-					FLow <= tmp8Bit;
+				when "0000" => -- A+B
+					FLow <= adderSumResult;
+					Cout <= adderCarry;
+					FHigh <= x"00";
 					
 				when "0001" => -- A-B
 					if A > B then
