@@ -26,10 +26,14 @@ def main():
                 if(op == "1011"):
                     (flow, carry) = func(a, b)
                     flow = flow[2:].zfill(16)
-                    write_expected(f"{flow[-8:]} {flow[:8]} {bin(a==b)[2:]} {carry[2:]}")
+                    write_expected(f"{flow[-8:]} {flow[:8]} {carry[2:]} {bin(a==b)[2:]}")
                 else:
                     (flow, carry) = func(a, b)
+<<<<<<< Updated upstream
                     write_expected(f"00000000 {flow[2:].zfill(8)} {bin(a==b)[2:]} {carry[2:]}")
+=======
+                    write_expected(f"{flow[2:].zfill(8)} {carry[2:]} {bin(a==b)[2:]}")
+>>>>>>> Stashed changes
 
 def write_stimuli(line):
     with open(STIMULI_FILE_PATH, "a+") as stimuli:

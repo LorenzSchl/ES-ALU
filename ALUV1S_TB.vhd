@@ -133,8 +133,8 @@ end std_logic2string;
 
 shared variable expectedFlow : STRING(8 DOWNTO 1);
 shared variable expectedFHigh : STRING(8 DOWNTO 1);
-shared variable expectedCOut : STRING(1 DOWNTO 1);
-shared variable expectedEqual : STRING(1 DOWNTO 1);
+shared variable expectedCOut : CHARACTER;
+shared variable expectedEqual : CHARACTER;
 
 -- Testbench
 BEGIN
@@ -160,6 +160,9 @@ STIMULI: PROCESS(CLK)
   VARIABLE var1: STRING(8 DOWNTO 1);
   VARIABLE var2: STRING(8 DOWNTO 1);
   VARIABLE cmdVar: STRING(4 DOWNTO 1);
+  
+  VARIABLE test : std_logic_vector(5 downto 0) := "000000";
+
 BEGIN
   IF(CLK'EVENT AND CLK = '1') THEN
     IF(NOT endfile(testpattern)) THEN
@@ -181,6 +184,8 @@ BEGIN
       B <= (OTHERS => '0');
 		Cmd <= (OTHERS => '0');
     END IF;
+	 A <= test;
+	 test := test + 1;
   END IF;
 END PROCESS STIMULI;
  
@@ -213,22 +218,22 @@ BEGIN
 		  -- Assert for COut
 		  read(zeile, leerzeichen); --Deleting the LEERZEICHEN!
 		  read(zeile, COutVar);
-		  expectedCOut := COutVar;
+		  expectedCOut := COutVar(1);
         ASSERT char2std_logic(COutVar(1)) = COut
           REPORT "Vergleich fehlerhaft!" & "  Erwartungswert: " & COutVar & "  Ergebnis: " & std_logic2char(COut)
           SEVERITY WARNING;
 		  -- Assert for Equal
 		  read(zeile, leerzeichen); --Deleting the LEERZEICHEN!
 		  read(zeile, EqualsVar);
-		  expectedEqual := EqualsVar;
+		  expectedEqual := EqualsVar(1);
         ASSERT char2std_logic(EqualsVar(1)) = EqualOut
           REPORT "Vergleich fehlerhaft!" & "  Erwartungswert: " & EqualsVar & "  Ergebnis: " & std_logic2char(EqualOut)
           SEVERITY WARNING;
 		ELSE 
 			expectedFlow := (others => 'X');
 			expectedFHigh := (others => 'X');
-			expectedCOut := (others => 'X');
-			expectedEqual := (others => 'X');
+			expectedCOut := 'X';
+			expectedEqual := 'X';
       END IF;
     END IF;
   END IF;
@@ -244,8 +249,8 @@ MONITOR: PROCESS(CLK)
   VARIABLE CmdVar: STRING(4 DOWNTO 1);
   VARIABLE FLowVar: STRING(8 DOWNTO 1);
   VARIABLE FHighVar: STRING(8 DOWNTO 1);
-  VARIABLE COutVar: STRING(1 DOWNTO 1);
-  VARIABLE EqualsVar: STRING(1 DOWNTO 1);
+  VARIABLE COutVar: CHARACTER;
+  VARIABLE EqualsVar: CHARACTER;
 
   VARIABLE simulationszeit: TIME;
 BEGIN
@@ -256,8 +261,11 @@ BEGIN
 		CmdVar := std_logic2string(Cmd);
 		FLowVar := std_logic2string(LowOut);
 		FHighVar := std_logic2string(HighOut);
+		COutVar := std_logic2char(COut);
+		EqualsVar := std_logic2char(EqualOut);
       simulationszeit := NOW;
 		
+		IF(NOT(expectedFlow = FLowVar AND expectedFHigh = FHighVar AND expectedCOut = COutVar AND expectedEqual = EqualsVar)) then
 		--Inputs
       write(zeile, "A: " & AVar);
       write(zeile, leerzeichen);
@@ -271,7 +279,7 @@ BEGIN
       write(zeile, leerzeichen);
 		write(zeile, "Exp-FHigh: " & expectedFHigh);
       write(zeile, leerzeichen);
-		write(zeile, "Exp-COut" & expectedCOut);
+		write(zeile, "Exp-COut: " & expectedCOut);
       write(zeile, leerzeichen);
 		write(zeile, "Exp-Equal: " & expectedEqual);
       write(zeile, leerzeichen);
@@ -285,12 +293,11 @@ BEGIN
       write(zeile, leerzeichen);
 		write(zeile, "Equals: " & EqualsVar);
       write(zeile, leerzeichen);
-
-		
 		
       write(zeile, "Time: ");
 		write(zeile, simulationszeit);
       writeline(protokoll, zeile);
+		END IF;
     END IF;
   END IF;	 
 END PROCESS MONITOR;

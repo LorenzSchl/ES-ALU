@@ -48,19 +48,13 @@ architecture Behavioral of ALUV1S is
 	signal adderSumResult : std_logic_vector(7 downto 0) := (others => '0');
 	signal adderCarry : std_logic := '0';
 	
-	--Signals for CRC
-	signal crcDataInA : std_logic_vector(7 downto 0);
-	signal crcDataInB : std_logic_vector(7 downto 0);
-	signal crcDataOutA : std_logic_vector(7 downto 0);
-	signal crcDataOutB : std_logic_vector(7 downto 0);
-	signal crcAddA : std_logic_vector(8 downto 0);
-	signal crcAddB : std_logic_vector(8 downto 0);
-	signal crcResA : std_logic := '1';
-	signal crcResB : std_logic := '1';
-	signal crcEnA : std_logic := '0';
-	signal crcEnB : std_logic := '0';
-	signal crcWrEnA : std_logic := '0';
-	signal crcWrEnB : std_logic := '0';
+	--Signals for RAM
+	signal ramDataIn : std_logic := '0';
+	signal ramDataOut : std_logic := '0';
+	signal ramEnable : std_logic := '0';
+	signal ramWrEnable : std_logic := '0';
+	signal ramReset : std_logic := '0';
+	signal ramAddr : std_logic_vector(5 downto 0) := (others => '0');
 begin
 
 	--Instatntiation of Carry Look Ahead Adder
@@ -71,21 +65,14 @@ begin
               sum => adderSumResult,
               carry_out => adderCarry);
 				  
-		XYZRam : entity work.xyzram port map(
-		CLKA => CLK,
-		CLKB => CLK,
-		DIA => crcDataInA,
-		DIB => crcDataInB,
-		DOA => crcDataOutA,
-		DOB => crcDataOutB,
-		ADDRA => crcAddA,
-		ADDRB => crcAddB,
-		ENA => crcEnA,
-		ENB => crcEnB,
-		RSTA => crcResA,
-		RSTB => crcResB,
-		WEA => crcWrEnA,
-		WEB => crcWrEnB
+		ram: entity work.ram_64x1 port map(
+		WCLK => CLK,
+		D => ramDataIn,
+		O => ramDataOut,
+		ADDR => ramAddr,
+		EN => ramEnable,
+		RST => ramReset,
+		WE => ramWrEnable
 		);
 		 				  
 	process(A, B, Cmd, CLK)
@@ -96,8 +83,11 @@ begin
 		
 	begin		
 		if rising_edge(CLK) then
+			Cout <= '0';
 			if A = B then
 				Equal <= '1';
+			else
+				Equal <= '0';
 			end if;
 			
 			case(Cmd) is
@@ -163,12 +153,8 @@ begin
 					FLow <= A xor B;
 					
 				when "1110" => -- CRC_MEM
-				crcEnA <= '1';
-		      crcEnB <= '1';
-				crcResA <= '0';
-	         crcResB <= '0';
-				crcAddA <= x"00";
-				crcAddB <= x"00";
+				ramEnable <= '1';
+				ramAddr <= A(5 downto 0);
 				
 				when "1111" => -- RESERVED
 				
