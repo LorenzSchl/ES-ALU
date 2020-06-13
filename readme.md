@@ -76,7 +76,7 @@ Tabelle 2: Gruppenschwerpunkte
 * CRC_MEM
 * Constanten aus den Shifts/Rotates entfernen?
 * Verschiedene Berechnungen in eigene Komponenten auslagern
-* Gibt es ein schnelleren Addierer?
+* ~~Gibt es ein schnelleren Addierer?~~
 * Gibt es einen schnelleren Multiplizierer?
 * ~~Negation überdenken?~~
 * Wie gehen wir mit Negativen Zahlen um?
