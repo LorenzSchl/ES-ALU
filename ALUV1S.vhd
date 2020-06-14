@@ -88,8 +88,8 @@ begin
 					B => A,
 					Data => subBAResult,
 					carry => subBACarry);
-	 ShiftLeft: entity work.shift port map (A => A, right => '0', D => shiftLeftData);
-	 ShiftRight: entity work.shift port map (A => A, right => '1', D => shiftRightData);
+	 ShiftLeft: entity work.shift port map (A => A, left => '1', D => shiftLeftData);
+	 ShiftRight: entity work.shift port map (A => A, left => '0', D => shiftRightData);
 	
 	 --Instantiation of Left Rotate
 	 RLL: entity work.rotater port map(

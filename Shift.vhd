@@ -31,7 +31,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity Shift is
     Port ( A : in  std_logic_vector(7 downto 0);
-			  right : in std_logic; --Shifts to the left if 1, otherwise it shifts right.
+			  left : in std_logic; --Shifts to the left if 1, otherwise it shifts right.
            D : out  std_logic_vector(7 downto 0));
 end Shift;
 
@@ -43,7 +43,7 @@ process(A)
 	variable temp:  std_logic_vector(7 downto 0):= x"00";
 begin
 
-IF(right = '1')THEN
+IF(left = '1')THEN
 			temp(7 downto 1) := A(6 downto 0);
 			temp(0) := '0';
 		ELSE
