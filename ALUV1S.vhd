@@ -47,6 +47,12 @@ architecture Behavioral of ALUV1S is
 	--Signal for Adder Results
 	signal adderSumResult : std_logic_vector(7 downto 0) := (others => '0');
 	signal adderCarry : std_logic := '0';
+	
+	--Signal for Subtracter Results
+	signal subABResult : std_logic_vector(7 downto 0) := (others => '0');
+	signal subABCarry : std_logic := '0';
+	signal subBAResult : std_logic_vector(7 downto 0) := (others => '0');
+	signal subBACarry : std_logic := '0';
 
 begin
 
@@ -57,6 +63,18 @@ begin
               carry_in => '0',
               sum => adderSumResult,
               carry_out => adderCarry);
+	 --Instantiation of Subtracter (A - B)
+	 SUBAB: entity work.subtracter port map(
+					A => A,
+					B => B,
+					Data => subABResult,
+					carry => subABCarry);
+	--Instantiation of Subtracter (B - A)
+	 SUBBA: entity work.subtracter port map(
+					A => B,
+					B => A,
+					Data => subBAResult,
+					carry => subBACarry);
 				  
 	process(A, B, Cmd, CLK)
 		variable tmpCarry : std_logic := '0';
@@ -77,24 +95,14 @@ begin
 					FHigh <= x"00";
 					
 				when "0001" => -- A-B
-					if A > B then
-						FLow <= A - B;
-					elsif A = B then
-						FLow <= x"00";
-					else
-						FLow <= x"00";
-						Cout <= '1';
-					end if;	
+					FLow <= subABResult;
+					FHigh <= x"00";
+					Cout <= subABCarry;
 					
 				when "0010" => -- B-A
-					if A < B then
-						FLow <= B - A;
-					elsif A = B then
-						FLow <= x"00";
-					else
-						FLow <= x"00";
-						Cout <= '1';
-					end if;
+					FLow <= subBAResult;
+					FHigh <= x"00";
+					Cout <= subBACarry;
 					
 				when "0011" => -- A
 					FLow <= A;
