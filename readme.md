@@ -1,5 +1,6 @@
 # Projektaufgabe 3 : Applikationsspezifische ALU
 
+## Beschreibung der Aufgabe:
 Ihre Aufgabe ist es, eine applikationsspezifische arithmetisch-logische Einheit (ALU) zu realisieren und zu spezifizieren, die als Berechnungseinheit in einer kleinen Motorsteuerung eingesetzt werden soll. 
 Die Wortbreite der ALU beträgt 8 bit; damit sind die Eingangsoperatoren (A, B) festgelegt. 
 Am Ausgang ist eine 16-bit Wortbreite notwendig, da die ALU auch einen Multiplikationsbefehl besitzt. 
@@ -65,10 +66,23 @@ Tabelle 2: Gruppenschwerpunkte
 
 |Gruppennummer |Device |Entwurfsziel|
 |--------------|-------|------------|
-|Friesen, Macke, Schlüter| Virtex4| „Maximale“ Geschwindigkeit|
+|**Friesen, Macke, Schlüter**| **Virtex4**| **„Maximale“ Geschwindigkeit**|
 |Beckmann, Ehlers, Köhler| Virtex4| „Maximale“ Geschwindigkeit|
 |Ochsner, Salvage, Stuke| Virtex4| „Minimaler“ Ressourceneinsatz|
 |Ertingshausen, Lee, Schottelius| Virtex4| „Minimaler“ Ressourceneinsatz|
+
+## Aufbau der Testdatein
+Da die Testdatein keine Beschriftungen der jeweiligen "Spalten" haben, wird hier einmal kurz festgehalten was welcher Wert aussagt.
+
+### expected.txt
+| Bit 0-7 	|   	| Bit 8-15 	|   	| B16  	| B17    	|
+|---------	|---	|----------	|---	|------	|--------	|
+| FHigh   	|   	| FLow     	|   	| COut 	| Equals 	|
+
+### stimuli.txt
+| Bit 0-7 	|   	| Bit 8-15 	|   	| B16-20  	|
+|---------	|---	|----------	|---	|---------	|
+| A       	|   	| B        	|   	| Command 	|
 
 ## TODOs: 
 * ~~Mehr Testvektoren (generieren)~~
