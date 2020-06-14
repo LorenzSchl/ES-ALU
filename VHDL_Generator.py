@@ -1,7 +1,7 @@
-STIMULI_FILE_PATH = "S:/Uni/stimuli.txt"
-EXPECTED_FILE_PATH = "S:/Uni/expected.txt"
-#STIMULI_FILE_PATH = "/home/lorsch/Daten/FHDW/6. Semester/ES/Projekte/ES-ALU/stimuli.txt"
-#EXPECTED_FILE_PATH = "/home/lorsch/Daten/FHDW/6. Semester/ES/Projekte/ES-ALU/expected.txt"
+#STIMULI_FILE_PATH = "S:/Uni/stimuli.txt"
+#EXPECTED_FILE_PATH = "S:/Uni/expected.txt"
+STIMULI_FILE_PATH = "/home/lorsch/Daten/FHDW/6. Semester/ES/Projekte/ES-ALU/stimuli.txt"
+EXPECTED_FILE_PATH = "/home/lorsch/Daten/FHDW/6. Semester/ES/Projekte/ES-ALU/expected.txt"
 
 
 OPERANTS = [
