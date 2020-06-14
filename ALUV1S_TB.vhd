@@ -201,28 +201,28 @@ BEGIN
 		  read(zeile, highVar);
 		  expectedFHigh := highVar;
         ASSERT string2std_logic(highVar) = HighOut
-          REPORT "Vergleich fehlerhaft!" & "  Erwartungswert: " & highVar & "  Ergebnis: " & std_logic2string(HighOut)
+          REPORT "FHigh Vergleich fehlerhaft!" & "  Erwartungswert: " & highVar & "  Ergebnis: " & std_logic2string(HighOut)
           SEVERITY WARNING;		  
 		  -- Assert for FLow
 		  read(zeile, leerzeichen); --Deleting the LEERZEICHEN!
 		  read(zeile, lowVar);
 		  expectedFlow := lowVar;
         ASSERT string2std_logic(lowVar) = LowOut
-          REPORT "Vergleich fehlerhaft!" & "  Erwartungswert: " & lowVar & "  Ergebnis: " & std_logic2string(LowOut)
+          REPORT "FLow Vergleich fehlerhaft!" & "  Erwartungswert: " & lowVar & "  Ergebnis: " & std_logic2string(LowOut)
           SEVERITY WARNING;
 		  -- Assert for COut
 		  read(zeile, leerzeichen); --Deleting the LEERZEICHEN!
 		  read(zeile, COutVar);
 		  expectedCOut := COutVar;
         ASSERT char2std_logic(COutVar(1)) = COut
-          REPORT "Vergleich fehlerhaft!" & "  Erwartungswert: " & COutVar & "  Ergebnis: " & std_logic2char(COut)
+          REPORT "Carry Vergleich fehlerhaft!" & "  Erwartungswert: " & COutVar & "  Ergebnis: " & std_logic2char(COut)
           SEVERITY WARNING;
 		  -- Assert for Equal
 		  read(zeile, leerzeichen); --Deleting the LEERZEICHEN!
 		  read(zeile, EqualsVar);
 		  expectedEqual := EqualsVar;
         ASSERT char2std_logic(EqualsVar(1)) = EqualOut
-          REPORT "Vergleich fehlerhaft!" & "  Erwartungswert: " & EqualsVar & "  Ergebnis: " & std_logic2char(EqualOut)
+          REPORT "Equal Vergleich fehlerhaft!" & "  Erwartungswert: " & EqualsVar & "  Ergebnis: " & std_logic2char(EqualOut)
           SEVERITY WARNING;
 		ELSE 
 			expectedFlow := (others => 'X');

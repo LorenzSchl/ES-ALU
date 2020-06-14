@@ -9,8 +9,8 @@ OPERANTS = [
     (lambda a, b : (bin(b), bin(0)), "0100"),
     (lambda a, b : (bin(flip_bits(bin(a))), bin(0)), "0101"),
     (lambda a, b : (bin(flip_bits(bin(b))), bin(0)), "0110"),
-    (lambda a, b : ((bin(int(bin(a << 1)[-8:], 2))) if len(bin(a << 1)) > 10 else (bin(int(bin(a << 1)[2:].zfill(8), 2))), bin(int(bin(a)[2:][0], 2))), "0111"),
-    (lambda a, b : (bin(a >> 1), bin(int(bin(a)[-1:], 2))), "1000"),
+    (lambda a, b : ((bin(int(bin(a << 1)[-8:], 2))) if len(bin(a << 1)) > 10 else (bin(int(bin(a << 1)[2:].zfill(8), 2))), bin(0)), "0111"),
+    (lambda a, b : (bin(a >> 1), bin(0)), "1000"),
     (lambda a, b : (bin(rotate_left(bin(a))), bin(0)), "1001"),
     (lambda a, b : (bin(rotate_right(bin(a))), bin(0)), "1010"),
     (lambda a, b : (bin(a*b), bin(0)), "1011"),
@@ -26,10 +26,10 @@ def main():
                 if(op == "1011"):
                     (flow, carry) = func(a, b)
                     flow = flow[2:].zfill(16)
-                    write_expected(f"{flow[-8:]} {flow[:8]} {bin(a==b)[2:]} {carry[2:]}")
+                    write_expected(f"{flow[-8:]} {flow[:8]} {carry[2:]} {bin(a==b)[2:]}")
                 else:
                     (flow, carry) = func(a, b)
-                    write_expected(f"00000000 {flow[2:].zfill(8)} {bin(a==b)[2:]} {carry[2:]}")
+                    write_expected(f"00000000 {flow[2:].zfill(8)} {carry[2:]} {bin(a==b)[2:]}")
 
 def write_stimuli(line):
     with open(STIMULI_FILE_PATH, "a+") as stimuli:
