@@ -53,6 +53,10 @@ architecture Behavioral of ALUV1S is
 	signal subABCarry : std_logic := '0';
 	signal subBAResult : std_logic_vector(7 downto 0) := (others => '0');
 	signal subBACarry : std_logic := '0';
+		
+	--Signals for shifting
+	signal shiftLeftData : std_logic_vector(7 downto 0) := (others => '0');
+	signal shiftRightData : std_logic_vector(7 downto 0) := (others => '0');
 
 begin
 
@@ -75,7 +79,9 @@ begin
 					B => A,
 					Data => subBAResult,
 					carry => subBACarry);
-				  
+	 ShiftLeft: entity work.shift port map (A => A, left => '1', D => shiftLeftData);
+	 ShiftLeft: entity work.shift port map (A => A, left => '0', D => shiftRightData);
+	
 	process(A, B, Cmd, CLK)
 		variable tmpCarry : std_logic := '0';
 		variable tmp8Bit : std_logic_vector(7 downto 0) := x"00";
@@ -87,21 +93,18 @@ begin
 			if A = B then
 				Equal <= '1';
 			end if;
-			
+			FHigh <= x"00";
 			case(Cmd) is
 				when "0000" => -- A+B
 					FLow <= adderSumResult;
 					Cout <= adderCarry;
-					FHigh <= x"00";
 					
 				when "0001" => -- A-B
 					FLow <= subABResult;
-					FHigh <= x"00";
 					Cout <= subABCarry;
 					
 				when "0010" => -- B-A
 					FLow <= subBAResult;
-					FHigh <= x"00";
 					Cout <= subBACarry;
 					
 				when "0011" => -- A
