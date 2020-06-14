@@ -1,10 +1,13 @@
-STIMULI_FILE_PATH = "S:/Uni/stimuli.txt"
-EXPECTED_FILE_PATH = "S:/Uni/expected.txt"
+#STIMULI_FILE_PATH = "S:/Uni/stimuli.txt"
+#EXPECTED_FILE_PATH = "S:/Uni/expected.txt"
+STIMULI_FILE_PATH = "/home/lorsch/Daten/FHDW/6. Semester/ES/Projekte/ES-ALU/stimuli.txt"
+EXPECTED_FILE_PATH = "/home/lorsch/Daten/FHDW/6. Semester/ES/Projekte/ES-ALU/expected.txt"
+
 
 OPERANTS = [
     (lambda a, b : (bin(a+b & 0b11111111), bin(a+b > 255)), "0000"),
     (lambda a, b : (bin(a-b & 0b11111111) if a>b else bin(0b00000000), bin(a<b)), "0001"),
-    (lambda a, b : (bin(b-a & 0b11111111) if a<b else bin(0b00000000), bin(b<a)), "0010"),
+    (lambda a, b : (bin(b-a & 0b11111111) if b>a else bin(0b00000000), bin(b<a)), "0010"),
     (lambda a, b : (bin(a), bin(0)), "0011"),
     (lambda a, b : (bin(b), bin(0)), "0100"),
     (lambda a, b : (bin(flip_bits(bin(a))), bin(0)), "0101"),
@@ -20,12 +23,13 @@ OPERANTS = [
 
 def main():
     for func, op in OPERANTS:
-        for a in range(0, 255, 10):
-            for b in range(0, 255, 10):                
+        for a in range(0, 255, 1):
+            print("A:",a)        
+            for b in range(0, 255, 1):        
                 if(op == "1011"):
                     (flow, carry) = func(a, b)
                     flow = flow[2:].zfill(16)
-                    write_expected(f"{flow[-8:]} {flow[:8]} {carry[2:]} {bin(a==b)[2:]}")
+                    write_expected(f"{flow[:8]} {flow[-8:]} {carry[2:]} {bin(a==b)[2:]}")
                     write_stimuli(f"{bin(a)[2:].zfill(8)} {bin(b)[2:].zfill(8)} {op}")
                 else:
                     (flow, carry) = func(a, b)
