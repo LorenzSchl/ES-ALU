@@ -48,14 +48,6 @@ architecture Behavioral of ALUV1S is
 	signal adderSumResult : std_logic_vector(7 downto 0) := (others => '0');
 	signal adderCarry : std_logic := '0';
 	
-	--Signals for RAM
-	signal ramDataIn : std_logic := '0';
-	signal ramDataOut : std_logic := '0';
-	signal ramEnable : std_logic := '0';
-	signal ramWrEnable : std_logic := '0';
-	signal ramReset : std_logic := '0';
-	signal ramAddr : std_logic_vector(5 downto 0) := (others => '0');
-	
 	--Signal for Subtracter Results
 	signal subABResult : std_logic_vector(7 downto 0) := (others => '0');
 	signal subABCarry : std_logic := '0';
@@ -65,15 +57,20 @@ architecture Behavioral of ALUV1S is
 	--Signal for Subtracter Results
 	signal A_rll : std_logic_vector(7 downto 0) := (others => '0');
 	signal A_rlr : std_logic_vector(7 downto 0) := (others => '0');
+	
+	--Signal for CRC
+	signal crcEN : std_logic := '0';
+	signal crcData : std_logic_vector(15 downto 0);
+	
 begin
 
 	--Instatntiation of Carry Look Ahead Adder
-		ADDER: entity work.CLAdder port map(
-		        x_in => A,
-              y_in => B,
-              carry_in => '0',
-              sum => adderSumResult,
-              carry_out => adderCarry);
+	--ADDER: entity work.CLAdder port map(
+	--	        x_in => A,
+   --          y_in => B,
+   --         carry_in => '0',
+   --         sum => adderSumResult,
+   --         carry_out => adderCarry);
 	 --Instantiation of Subtracter (A - B)
 	 SUBAB: entity work.subtracter port map(
 					A => A,
@@ -96,16 +93,12 @@ begin
 					X_In => A,
 					rotate_left => '0',					
 					X_Out => A_rlr);
-				  
-		ram: entity work.ram_64x1 port map(
-		WCLK => CLK,
-		D => ramDataIn,
-		O => ramDataOut,
-		ADDR => ramAddr,
-		EN => ramEnable,
-		RST => ramReset,
-		WE => ramWrEnable
-		);
+	 --Instantiation of the crc_mem
+	 CRCMEM : entity work.crc_mem port map(
+		EN => crcEN,
+		CLK => CLK,
+		DATA => crcData
+	 );
 		 				  
 	process(A, B, Cmd, CLK)
 		variable tmpCarry : std_logic := '0';
@@ -175,9 +168,7 @@ begin
 					FLow <= A xor B;
 					
 				when "1110" => -- CRC_MEM
-				ramEnable <= '1';
-				ramAddr <= A(5 downto 0);
-				
+				crcEN <= '1';
 				when "1111" => -- RESERVED
 				
 				when others => 
