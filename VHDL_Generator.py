@@ -23,8 +23,9 @@ OPERANTS = [
 
 def main():
     for func, op in OPERANTS:
-        for a in range(0, 255, 10):
-            for b in range(0, 255, 10):                
+        for a in range(0, 255, 1):
+            print("A:",a)        
+            for b in range(0, 255, 1):        
                 if(op == "1011"):
                     (flow, carry) = func(a, b)
                     flow = flow[2:].zfill(16)
