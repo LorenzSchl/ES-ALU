@@ -58,6 +58,15 @@ architecture Behavioral of ALUV1S is
 	signal shiftLeftData : std_logic_vector(7 downto 0) := (others => '0');
 	signal shiftRightData : std_logic_vector(7 downto 0) := (others => '0');
 
+	
+	--Signal for Subtracter Results
+	signal A_rll : std_logic_vector(7 downto 0) := (others => '0');
+	signal A_rlr : std_logic_vector(7 downto 0) := (others => '0');
+	
+	--Signal for CRC
+	signal CRC_En : std_logic;
+	signal crc_out : std_logic_vector(14 downto 0);
+	
 begin
 
 	--Instatntiation of Carry Look Ahead Adder
@@ -82,6 +91,23 @@ begin
 	 ShiftLeft: entity work.shift port map (A => A, left => '1', D => shiftLeftData);
 	 ShiftLeft: entity work.shift port map (A => A, left => '0', D => shiftRightData);
 	
+	 --Instantiation of Left Rotate
+	 RLL: entity work.rotater port map(
+					X_In => A,
+					rotate_left => '1',
+					X_Out => A_rll);
+	 --Instantiation of Left Rotate
+	 RLR: entity work.rotater port map(
+					X_In => A,
+					rotate_left => '0',					
+					X_Out => A_rlr);
+					
+	 CRC: entity work.crc port map(
+					CLK => CLK,
+					EN => CRC_En,
+					DATA => crc_out);
+					
+				  
 	process(A, B, Cmd, CLK)
 		variable tmpCarry : std_logic := '0';
 		variable tmp8Bit : std_logic_vector(7 downto 0) := x"00";
@@ -145,7 +171,10 @@ begin
 					FLow <= A xor B;
 					
 				when "1110" => -- CRC_MEM
-				
+					CRC_En <= '1';
+					FLow <= crc_out(7 downto 0);
+					FHigh(6 downto 0) <= crc_out(14 downto 8);
+									
 				when "1111" => -- RESERVED
 				
 				when others => 

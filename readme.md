@@ -71,13 +71,14 @@ Tabelle 2: Gruppenschwerpunkte
 |Ertingshausen, Lee, Schottelius| Virtex4| „Minimaler“ Ressourceneinsatz|
 
 ## TODOs: 
-* Mehr Testvektoren (generieren)
-* Fehlende Funktionen implementieren	
+* ~~Mehr Testvektoren (generieren)~~
+* ~~Fehlende Funktionen implementieren~~	
 * CRC_MEM
-* Constanten aus den Shifts/Rotates entfernen?
-* Verschiedene Berechnungen in eigene Komponenten auslagern
+  * CRC Funktioniert, das laden aus RAM allerdings nicht.
+* ~~Constanten aus den Shifts/Rotates entfernen?~~
+* ~~Verschiedene Berechnungen in eigene Komponenten auslagern~~
 * ~~Gibt es ein schnelleren Addierer?~~
-* Gibt es einen schnelleren Multiplizierer?
+* ~~Gibt es einen schnelleren Multiplizierer?~~
 * ~~Negation überdenken?~~
 * Wie gehen wir mit Negativen Zahlen um?
   *  Als Eingaben verboten - Wird nur im einer Komplement ausgegeben
