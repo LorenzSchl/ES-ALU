@@ -3,8 +3,8 @@ EXPECTED_FILE_PATH = "S:/Uni/expected.txt"
 
 OPERANTS = [
     (lambda a, b : (bin(a+b & 0b11111111), bin(a+b > 255)), "0000"),
-    (lambda a, b : (bin(a-b & 0b11111111) if a>b == 0 else bin(0b00000000), bin(a<b)), "0001"),
-    (lambda a, b : (bin(b-a & 0b11111111) if a<b == 0 else bin(0b00000000), bin(b<a)), "0010"),
+    (lambda a, b : (bin(a-b & 0b11111111) if a>b else bin(0b00000000), bin(a<b)), "0001"),
+    (lambda a, b : (bin(b-a & 0b11111111) if a<b else bin(0b00000000), bin(b<a)), "0010"),
     (lambda a, b : (bin(a), bin(0)), "0011"),
     (lambda a, b : (bin(b), bin(0)), "0100"),
     (lambda a, b : (bin(flip_bits(bin(a))), bin(0)), "0101"),
