@@ -21,34 +21,32 @@ Das Xilinx ISE produziert nach dem Implementieren des Designs eine Übersicht ü
 ### Device Utilization Summary
 |Logic Utilization|Used|Available|Utilization|
 |-|-|-|-|
-|Total Number Slice Registers|25|10,944|1%|
-|Number used as Flip Flops|9|
-|Number used as Latches|16|
-|Number of 4 input LUTs|132|10,944|1%|
+|Number used as Flip Flops|8|
+|Number of 4 input LUTs|135|10,944|1%|
 |Number of occupied Slices|69|5,472|1%|
 |Number of Slices containing only related logic|69|69|100%|
 |Number of Slices containing unrelated logic|0|69|0%|
-|Total Number of 4 input LUTs|132|10,944|1%|
+|Total Number of 4 input LUTs|135|10,944|1%|
 |Number of bonded IOBs|39|240|16%|
-|IOB Flip Flops|8|
+|IOB Flip Flops|10|
 |Number of BUFG/BUFGCTRLs|1|32|3%|
 |Number used as BUFGs|1|
 |Number of DSP48s|1|32|3%|
-|Average Fanout of Non-Clock Nets|3.24|
+|Average Fanout of Non-Clock Nets|3.20|
 
 ## Power Summary
 |On-Chip|Power(W)|Used|Available|Utilization(%)|
 |-|-|-|-|-|
-|Clocks|0.006|3|--|--|
+|Clocks|0.007|3|--|--|
 |Logic|0.000|132|10944|1|
 |Signals|0.000|163|--|--|
 |DSPs|0.000|1|32|3|
 |DCMs|0.000|0|4|0|
 |IOs|0.000|39|240|16|
 |Leakage|0.167|
-> Total Power 0.173W
+> Total Power 0.174W
 
 ## Temperatur-Eigenschaften
 * Effective TJA (C/W): 14.7
-* Max Ambient (C): 82.5
-* Junction Temp: 52.5
+* Max Ambient (C): 82.4
+* Junction Temp: 52.6
