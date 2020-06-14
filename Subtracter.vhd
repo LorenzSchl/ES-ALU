@@ -44,8 +44,9 @@ process(A,B)
 	variable tmpCarry : std_logic := '0';
 	variable tmpResult : std_logic_vector(7 downto 0) := x"00";
 begin	
-	IF(A<B)THEN
+	IF to_integer(unsigned(B)) > to_integer(unsigned(A))THEN
 	tmpCarry := '1';
+	tmpResult := x"00";
 	ELSE
 	tmpCarry := '0';
 	tmpResult := std_logic_vector(unsigned(A) - unsigned(B));

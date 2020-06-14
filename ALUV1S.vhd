@@ -118,6 +118,7 @@ begin
 			Equal <= '0';
 		end if;
 			FHigh <= x"00";
+			Cout <= '0';
 			case(Cmd) is
 				when "0000" => -- A+B
 					FLow <= adderSumResult;
