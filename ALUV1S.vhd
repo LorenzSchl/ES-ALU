@@ -89,7 +89,7 @@ begin
 					Data => subBAResult,
 					carry => subBACarry);
 	 ShiftLeft: entity work.shift port map (A => A, left => '1', D => shiftLeftData);
-	 ShiftLeft: entity work.shift port map (A => A, left => '0', D => shiftRightData);
+	 ShiftRight: entity work.shift port map (A => A, left => '0', D => shiftRightData);
 	
 	 --Instantiation of Left Rotate
 	 RLL: entity work.rotater port map(
@@ -146,18 +146,16 @@ begin
 					FLow <= not B;
 					
 				when "0111" => -- sll(A)
-					Cout <= A(7);
-					FLow <= std_logic_vector(unsigned(A) sll 1); -- Funktioniert nur im Simulator
+					FLow <= shiftLeftData;
 					
 				when "1000" => -- slr(A)
-					Cout <= A(0);
-					FLow <= std_logic_vector(unsigned(A) srl 1); -- Funktioniert nur im Simulator
+					FLow <= shiftRightData;
 					
 				when "1001" => -- rll(A)
-					FLow <= std_logic_vector(unsigned(A) rol 1); -- Funktioniert nur im Simulator
+					FLow <= A_rll;
 					
 				when "1010" => -- rlr(A)
-					FLow <= std_logic_vector(unsigned(A) ror 1); -- Funktioniert nur im Simulator
+					FLow <= A_rlr;
 					
 				when "1011" => -- A*B
 					tmp16Bit := std_logic_vector(to_unsigned((to_integer(unsigned(A)) * to_integer(unsigned(B))), 16));
