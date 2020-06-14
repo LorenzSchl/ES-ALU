@@ -109,16 +109,15 @@ begin
 					
 				  
 	process(A, B, Cmd, CLK)
-		variable tmpCarry : std_logic := '0';
-		variable tmp8Bit : std_logic_vector(7 downto 0) := x"00";
-		variable tmp16Bit : std_logic_vector(15 downto 0) := x"0000";
-		
-		
+		variable tmp16Bit : std_logic_vector(15 downto 0) := x"0000";		
 	begin		
+		if A = B then
+			Equal <= '1';
+		else
+			Equal <= '0';
+		end if;
+		
 		if rising_edge(CLK) then
-			if A = B then
-				Equal <= '1';
-			end if;
 			FHigh <= x"00";
 			case(Cmd) is
 				when "0000" => -- A+B
